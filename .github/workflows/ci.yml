@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Scan Git history for secrets
+        run: >-
+          docker run --rm --network none --read-only --tmpfs /tmp
+          -v "$PWD:/repo:ro"
+          ghcr.io/gitleaks/gitleaks:v8.24.3@sha256:e1b35e12a8c6fa8901f060459cfb6b2fc4c484d3afbe3b029733a3bbfab07055
+          git /repo --redact --no-banner --log-opts=--all
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.13.7'
+          python-version: '3.13.18'
+          enable-cache: true
+      - run: uv sync --locked --group dev
+      - run: uv run --locked ruff check .
+      - run: uv run --locked ruff format --check .
+      - run: uv run --locked mypy src
+      - run: uv run --locked pytest
+      - run: uv audit --locked
+      - run: uv build
+
+  container:
+    needs: quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - run: docker build --pull -t telegram-info-bot:ci .
+      - name: Smoke test container without Telegram credentials
+        run: python3 scripts/check_container.py telegram-info-bot:ci
