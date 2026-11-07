@@ -22,7 +22,7 @@ UPDATE = {
 def test_start_and_lifecycle(resources):
     app, session = resources
     with TestClient(app) as client:
-        assert client.get("/health/live").status_code == 200
+        assert client.get("/").status_code == 200
         assert client.get("/health/ready").status_code == 200
         response = client.post("/telegram/webhook", json=UPDATE, headers=HEADERS)
         assert response.status_code == 200
@@ -89,7 +89,7 @@ def test_delivery_errors_are_safe(resources, error, status, caplog):
 def test_readiness_before_startup(resources):
     app, _ = resources
     client = TestClient(app)
-    assert client.get("/health/live").status_code == 200
+    assert client.get("/").status_code == 200
     assert client.get("/health/ready").status_code == 503
 
 
@@ -118,5 +118,6 @@ def test_root_returns_ok(resources):
     app, _ = resources
     with TestClient(app) as client:
         response = client.get("/")
+        assert client.get("/health/live").status_code == 404
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}

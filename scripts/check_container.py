@@ -64,7 +64,7 @@ def main() -> None:
             raise RuntimeError("Container readiness timed out")
 
         wait_ready()
-        assert request("/health/live") == 200
+        assert request("/") == 200
         assert request("/telegram/webhook", b"{}") == 403
         assert request("/telegram/webhook", b"not json", True) == 400
         assert request("/telegram/webhook", b"{}", True) == 422
