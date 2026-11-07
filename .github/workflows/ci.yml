@@ -36,7 +36,7 @@ jobs:
       - run: uv sync --locked --group dev
       - run: uv run --locked ruff check .
       - run: uv run --locked ruff format --check .
-      - run: uv run --locked mypy src
+      - run: uv run --locked mypy src app.py
       - run: uv run --locked pytest
       - run: uv audit --locked
       - run: uv build

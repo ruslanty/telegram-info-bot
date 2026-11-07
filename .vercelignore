@@ -1,0 +1,11 @@
+/*
+!app.py
+!vercel.json
+!pyproject.toml
+!uv.lock
+!.python-version
+!README.md
+!LICENSE
+!src/
+**/__pycache__/
+**/*.py[cod]

@@ -30,10 +30,10 @@ select = ["E", "F", "I", "UP", "B", "ASYNC"]
 [tool.mypy]
 python_version = "3.13"
 strict = true
-files = ["src"]
+files = ["src", "app.py"]
 
 [tool.hatch.build.targets.sdist]
 only-include = [
   "src", "tests", "scripts", "docs", ".github", "README.md", "pyproject.toml",
-  "uv.lock", "Dockerfile", ".dockerignore", ".env.example", ".python-version", ".gitignore", "LICENSE",
+  "app.py", "vercel.json", ".vercelignore", "uv.lock", "Dockerfile", ".dockerignore", ".env.example", ".python-version", ".gitignore", "LICENSE",
 ]
