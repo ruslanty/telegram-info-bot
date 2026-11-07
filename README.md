@@ -1,5 +1,9 @@
 # Telegram Info Bot
 
+[![CI](https://github.com/ruslanty/telegram-info-bot/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ruslanty/telegram-info-bot/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ruslanty/telegram-info-bot)](https://github.com/ruslanty/telegram-info-bot/releases/latest)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 Find your Telegram user ID or a group's chat ID and copy it with one tap. Built with Python, FastAPI, and aiogram.
 
 [Try the bot](https://t.me/TgProfileInfoBot)
