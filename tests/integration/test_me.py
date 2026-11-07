@@ -56,15 +56,15 @@ def test_anonymous_sender_gets_explanation_without_copy_button(resources, anonym
     method = session.make_request.call_args.args[1]
     assert "<code>42</code>" not in method.text
     assert method.reply_markup is None
-    assert "sender" in method.text
+    assert "Send /me in a private chat" in method.text
 
 
-def test_group_response_warns_about_visibility(resources):
+def test_group_response_shows_profile_without_extra_explanations(resources):
     app, session = resources
     update = deepcopy(UPDATE)
     update["message"]["chat"] = {"id": -100123, "type": "supergroup", "title": "Group"}
     with TestClient(app) as client:
         assert client.post("/telegram/webhook", json=update, headers=HEADERS).status_code == 200
     method = session.make_request.call_args.args[1]
-    assert "everyone" in method.text
+    assert method.text == "ID: <code>42</code>\nFirst name: &lt;Test&gt;\nLanguage: ru"
     assert method.reply_markup.inline_keyboard[0][0].copy_text.text == "42"

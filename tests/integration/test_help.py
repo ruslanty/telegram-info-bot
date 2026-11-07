@@ -36,29 +36,34 @@ def send(client, text, language="en", chat_type="private"):
 
 @pytest.mark.parametrize("command", ["/help", "/help@test_bot"])
 @pytest.mark.parametrize("chat_type", ["private", "supergroup"])
-def test_help_lists_commands_and_explains_ids(resources, command, chat_type):
+def test_help_lists_only_available_commands(resources, command, chat_type):
     app, session = resources
     with TestClient(app) as client:
         assert send(client, command, chat_type=chat_type).status_code == 200
     method = session.make_request.call_args.args[1]
-    assert all(
-        command in method.text for command in ["/start", "/me", "/chat", "/help", "/privacy"]
-    )
-    assert "/chat@test_bot" in method.text
-    assert "A user ID identifies your account" in method.text
+    lines = method.text.splitlines()
+    assert lines[0] == "Commands:"
+    assert [line.split(" - ")[0] for line in lines[1:]] == [
+        "/start",
+        "/me",
+        "/chat",
+        "/help",
+        "/privacy",
+    ]
+    assert all(len(line) < 50 for line in lines[1:])
     assert method.parse_mode is None
 
 
 @pytest.mark.parametrize("command", ["/privacy", "/privacy@test_bot"])
-def test_privacy_describes_actual_processing(resources, command):
+def test_privacy_is_short_and_neutral(resources, command):
     app, session = resources
     with TestClient(app) as client:
         assert send(client, command).status_code == 200
     text = session.make_request.call_args.args[1].text
-    assert "does not store" in text
-    assert "Telegram" in text and "ngrok" in text
-    assert "participants" in text
-    assert "<" not in text
+    assert text == (
+        "Your profile and chat details are used to reply to your commands. "
+        "The bot does not save them."
+    )
 
 
 @pytest.mark.parametrize(
@@ -98,7 +103,7 @@ def test_private_fallback_ignores_commands_for_other_bots(resources, command):
         ("/me", "First name:"),
         ("/chat", "Type:"),
         ("/help", "Commands:"),
-        ("/privacy", "Data handling"),
+        ("/privacy", "Your profile and chat details"),
     ],
 )
 def test_all_commands_use_english_regardless_of_profile_language(

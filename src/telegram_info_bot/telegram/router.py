@@ -5,7 +5,7 @@ from aiogram.types import Message
 from telegram_info_bot.telegram.formatting import format_chat_info, format_user_info
 from telegram_info_bot.telegram.keyboards import copy_id_keyboard
 from telegram_info_bot.telegram.models import ChatInfo, UserInfo
-from telegram_info_bot.telegram.texts import FALLBACK_TEXT, PRIVACY_TEXT, help_text
+from telegram_info_bot.telegram.texts import FALLBACK_TEXT, HELP_TEXT, PRIVACY_TEXT
 
 
 def create_router() -> Router:
@@ -13,7 +13,7 @@ def create_router() -> Router:
 
     @router.message(CommandStart())
     async def start(message: Message) -> None:
-        text = "Find Telegram IDs for your integrations.\nCommands: /me, /chat, /help, /privacy."
+        text = "Use /me for your profile, /chat for chat details, or /help for all commands."
         user = message.from_user
         if message.chat.type == "private" and user and not message.sender_chat:
             text = f"Your Telegram ID: {user.id}\n\n" + text
@@ -24,15 +24,12 @@ def create_router() -> Router:
         user = message.from_user
         if message.sender_chat or user is None:
             await message.answer(
-                "Cannot identify the sender: this message was sent on behalf of a chat "
-                "or sender details are unavailable. Send /me in a private chat with the bot.",
+                "I can’t see your profile here. Send /me in a private chat with me.",
                 parse_mode=None,
             )
             return
         info = UserInfo(user.id, user.first_name, user.last_name, user.username, user.language_code)
         text = format_user_info(info)
-        if message.chat.type != "private":
-            text += "\n\nThis reply is visible to everyone in this chat."
         await message.answer(text, parse_mode="HTML", reply_markup=copy_id_keyboard(info.id))
 
     @router.message(Command("chat"))
@@ -45,9 +42,8 @@ def create_router() -> Router:
         )
 
     @router.message(Command("help"))
-    async def help_command(message: Message, bot: Bot) -> None:
-        identity = await bot.me()
-        await message.answer(help_text(identity.username or ""), parse_mode=None)
+    async def help_command(message: Message) -> None:
+        await message.answer(HELP_TEXT, parse_mode=None)
 
     @router.message(Command("privacy"))
     async def privacy_command(message: Message) -> None:
