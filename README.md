@@ -2,6 +2,10 @@
 
 Find your Telegram user ID or a group's chat ID and copy it with one tap. Built with Python, FastAPI, and aiogram.
 
+[Try the bot](https://t.me/TgProfileInfoBot)
+
+<img src="docs/images/profile-example.png" alt="Example profile details with a Copy ID button" width="360">
+
 ## Commands
 
 | Command | Description |
@@ -9,7 +13,7 @@ Find your Telegram user ID or a group's chat ID and copy it with one tap. Built 
 | `/start` | Get started |
 | `/me` | Your ID and profile details |
 | `/chat` | Chat ID, type, and title |
-| `/help` | Usage examples |
+| `/help` | List commands |
 | `/privacy` | How the bot handles data |
 
 In groups, address commands to your bot: `/chat@example_info_bot`.
