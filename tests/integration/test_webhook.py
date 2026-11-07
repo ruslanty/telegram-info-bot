@@ -112,3 +112,11 @@ def test_start_group_privacy(resources, chat_type, expected_id):
     text = session.make_request.call_args.args[1].text
     assert ("42" in text) is expected_id
     assert ("Your Telegram ID" in text) is expected_id
+
+
+def test_root_returns_ok(resources):
+    app, _ = resources
+    with TestClient(app) as client:
+        response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}

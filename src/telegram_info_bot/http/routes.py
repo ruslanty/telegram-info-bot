@@ -22,6 +22,11 @@ BODY_TIMEOUT_SECONDS = 5
 PROCESSING_TIMEOUT_SECONDS = 15
 
 
+@router.get("/")
+async def index() -> dict[str, str]:
+    return {"status": "ok"}
+
+
 @router.get("/health/live")
 async def live() -> dict[str, str]:
     return {"status": "alive"}
