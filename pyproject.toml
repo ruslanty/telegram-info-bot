@@ -3,6 +3,8 @@ name = "telegram-info-bot"
 version = "0.1.0"
 description = "Telegram identity helper with a FastAPI webhook"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.13,<3.14"
 dependencies = ["aiogram>=3.31,<4", "fastapi>=0.115,<1", "uvicorn>=0.34,<1", "python-dotenv>=1,<2", "pydantic>=2.12,<3"]
 
@@ -33,5 +35,5 @@ files = ["src"]
 [tool.hatch.build.targets.sdist]
 only-include = [
   "src", "tests", "scripts", "docs", ".github", "README.md", "pyproject.toml",
-  "uv.lock", "Dockerfile", ".dockerignore", ".env.example", ".python-version", ".gitignore",
+  "uv.lock", "Dockerfile", ".dockerignore", ".env.example", ".python-version", ".gitignore", "LICENSE",
 ]

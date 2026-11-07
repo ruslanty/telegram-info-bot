@@ -79,3 +79,5 @@ python3 scripts/check_container.py telegram-info-bot
 ```
 
 See [Architecture](docs/architecture.md) for the request flow and module boundaries.
+
+[MIT License](LICENSE)

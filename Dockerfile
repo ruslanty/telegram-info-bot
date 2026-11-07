@@ -4,7 +4,7 @@ FROM base AS builder
 COPY --from=ghcr.io/astral-sh/uv:0.13.7@sha256:96f40d3904aad8d0bd010539001d36c8e2188b981e1334471a90c4a1d93bb490 /uv /usr/local/bin/uv
 WORKDIR /app
 ENV UV_PYTHON_DOWNLOADS=never UV_LINK_MODE=copy
-COPY pyproject.toml uv.lock README.md ./
+COPY pyproject.toml uv.lock README.md LICENSE ./
 COPY src ./src
 RUN uv sync --locked --no-dev --no-editable --no-cache
 
